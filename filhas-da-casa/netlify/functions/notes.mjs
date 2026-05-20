@@ -1,9 +1,7 @@
-// Netlify Function: /api/notes
-// Lê e salva notas no Netlify Blobs
+// Cloudflare Pages Function: /api/notes
+// Lê e salva notas no Cloudflare KV (substitui Netlify Blobs)
 // GET  /api/notes?key=p123_x_studio_caboclo  → { text: "..." }
 // POST /api/notes  body: { key, text }        → { ok: true }
-
-import { getStore } from '@netlify/blobs';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -12,12 +10,21 @@ const CORS = {
   'Content-Type': 'application/json',
 };
 
-export default async (request) => {
+export async function onRequest(context) {
+  const { request, env } = context;
+
   if (request.method === 'OPTIONS') {
     return new Response('', { status: 200, headers: CORS });
   }
 
-  const store = getStore('notas-guias');
+  const kv = env.NOTAS_GUIAS;
+
+  if (!kv) {
+    return new Response(
+      JSON.stringify({ error: 'KV binding não configurado.' }),
+      { status: 500, headers: CORS }
+    );
+  }
 
   // ── GET ──────────────────────────────────────────────────────
   if (request.method === 'GET') {
@@ -31,13 +38,8 @@ export default async (request) => {
       );
     }
 
-    try {
-      const text = await store.get(key) ?? '';
-      return new Response(JSON.stringify({ text }), { status: 200, headers: CORS });
-    } catch {
-      // Chave não existe ainda → retorna string vazia
-      return new Response(JSON.stringify({ text: '' }), { status: 200, headers: CORS });
-    }
+    const text = await kv.get(key) ?? '';
+    return new Response(JSON.stringify({ text }), { status: 200, headers: CORS });
   }
 
   // ── POST ─────────────────────────────────────────────────────
@@ -61,11 +63,9 @@ export default async (request) => {
       );
     }
 
-    await store.set(key, text || '');
+    await kv.put(key, text || '');
     return new Response(JSON.stringify({ ok: true }), { status: 200, headers: CORS });
   }
 
   return new Response('Method Not Allowed', { status: 405, headers: CORS });
-};
-
-export const config = { path: '/api/notes' };
+}
