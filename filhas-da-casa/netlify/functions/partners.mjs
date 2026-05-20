@@ -1,5 +1,5 @@
 // Netlify Function: /api/partners
-// Authenticates with Odoo and returns partner data
+// Authenticates with Odoo and returns partner data + passagens
 
 export default async (request) => {
   const CORS = {
@@ -11,10 +11,10 @@ export default async (request) => {
     return new Response('', { status: 200, headers: CORS });
   }
 
-  const ODOO_URL  = process.env.ODOO_URL;   // e.g. https://suaempresa.odoo.com
-  const ODOO_DB   = process.env.ODOO_DB;    // nome do banco
-  const ODOO_USER = process.env.ODOO_USER;  // login admin
-  const ODOO_PASS = process.env.ODOO_PASS;  // senha admin
+  const ODOO_URL  = process.env.ODOO_URL;
+  const ODOO_DB   = process.env.ODOO_DB;
+  const ODOO_USER = process.env.ODOO_USER;
+  const ODOO_PASS = process.env.ODOO_PASS;
 
   if (!ODOO_URL || !ODOO_DB || !ODOO_USER || !ODOO_PASS) {
     return new Response(
@@ -23,8 +23,19 @@ export default async (request) => {
     );
   }
 
+  function callKw(url, cookie, model, method, args, kwargs, id) {
+    return fetch(`${url}/web/dataset/call_kw`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cookie': cookie },
+      body: JSON.stringify({
+        jsonrpc: '2.0', method: 'call', id,
+        params: { model, method, args, kwargs }
+      })
+    }).then(r => r.json());
+  }
+
   try {
-    // 1. Autenticar no Odoo
+    // 1. Autenticar
     const authRes = await fetch(`${ODOO_URL}/web/session/authenticate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -34,8 +45,8 @@ export default async (request) => {
       })
     });
 
-    const setCookie = authRes.headers.get('set-cookie') || '';
-    const authData  = await authRes.json();
+    const cookie   = authRes.headers.get('set-cookie') || '';
+    const authData = await authRes.json();
 
     if (!authData.result?.uid) {
       return new Response(
@@ -44,7 +55,7 @@ export default async (request) => {
       );
     }
 
-    // 2. Buscar parceiros (filhas)
+    // 2. Buscar parceiros
     const fields = [
       'name', 'function', 'image_128', 'id', 'email',
       'x_studio_data_da_iniciacao',
@@ -56,27 +67,44 @@ export default async (request) => {
       'x_studio_cosme',
     ];
 
-    const dataRes = await fetch(`${ODOO_URL}/web/dataset/call_kw`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': setCookie,
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0', method: 'call', id: 2,
-        params: {
-          model: 'res.partner',
-          method: 'search_read',
-          args: [[['user_ids', '!=', false]]],
-          kwargs: { fields, order: 'name asc' }
-        }
-      })
-    });
+    const [partnersRes, nomesRes, datasRes] = await Promise.all([
+      callKw(ODOO_URL, cookie, 'res.partner', 'search_read',
+        [[['user_ids', '!=', false]]],
+        { fields, order: 'name asc' }, 2),
 
-    const data = await dataRes.json();
+      // Passagens — nomes dos guias
+      callKw(ODOO_URL, cookie, 'x_res_partner_line_770ad', 'search_read',
+        [[]],
+        { fields: ['x_name', 'x_res_partner_id', 'x_studio_sequence'], order: 'x_studio_sequence asc' }, 3),
 
-    // Filtra a conta admin da lista
-    const partners = (data.result || []).filter(p => p.email !== ODOO_USER);
+      // Passagens — datas de chegada
+      callKw(ODOO_URL, cookie, 'x_res_partner_line_6f088', 'search_read',
+        [[]],
+        { fields: ['x_name', 'x_res_partner_id', 'x_studio_sequence'], order: 'x_studio_sequence asc' }, 4),
+    ]);
+
+    const partners = (partnersRes.result || []).filter(p => p.email !== ODOO_USER);
+
+    // Agrupa passagens por partner id
+    const nomesPorPartner = {};
+    const datasPorPartner = {};
+
+    for (const row of (nomesRes.result || [])) {
+      const pid = Array.isArray(row.x_res_partner_id) ? row.x_res_partner_id[0] : row.x_res_partner_id;
+      if (!nomesPorPartner[pid]) nomesPorPartner[pid] = [];
+      nomesPorPartner[pid].push(row.x_name);
+    }
+    for (const row of (datasRes.result || [])) {
+      const pid = Array.isArray(row.x_res_partner_id) ? row.x_res_partner_id[0] : row.x_res_partner_id;
+      if (!datasPorPartner[pid]) datasPorPartner[pid] = [];
+      datasPorPartner[pid].push(row.x_name);
+    }
+
+    // Anexa passagens a cada parceiro
+    for (const p of partners) {
+      p.passagens_nomes = nomesPorPartner[p.id] || [];
+      p.passagens_datas = datasPorPartner[p.id] || [];
+    }
 
     return new Response(JSON.stringify(partners), { status: 200, headers: CORS });
 
