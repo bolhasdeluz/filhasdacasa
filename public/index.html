@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terreiro de Umbanda e Quimbanda Bolhas de Luz</title>
+  <title>Filhas da Casa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -412,6 +412,14 @@
       margin-top: 0.9rem;
       align-items: center;
     }
+
+    .ponto-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin:14px 0 6px; display:block; }
+    .ponto-obs { font-size:0.75rem; color:var(--muted); font-style:italic; margin-bottom:6px; opacity:0.7; }
+    #ponto-link-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px 14px; color:var(--text); font-size:0.9rem; font-family:inherit; outline:none; transition:border-color 0.2s; }
+    #ponto-link-input:focus { border-color:var(--gold); }
+    #ponto-link-input::placeholder { color:var(--dim); }
+    .ponto-link-btn { display:inline-flex; align-items:center; gap:5px; margin-top:5px; font-size:0.75rem; color:var(--gold); text-decoration:none; opacity:0.8; transition:opacity 0.2s; }
+    .ponto-link-btn:hover { opacity:1; }
     .save-ok {
       font-size: 0.75rem;
       color: var(--gold);
@@ -464,8 +472,8 @@
 
 <header>
   <a href="https://www.bolhasdeluz.com/" class="btn-back">← Voltar ao site do terreiro</a>
-  <h1>Guias da Casa</h1>
-  <p class="sub">Terreiro de Umbanda e Quimbanda Bolhas de Luz</p>
+  <h1>Filhas da Casa</h1>
+  <p class="sub">consulta de guias</p>
 </header>
 
 <div class="search-wrap">
@@ -502,6 +510,9 @@
     <div class="m-guide-name" id="m-gname"></div>
     <div class="m-for" id="m-for"></div>
     <textarea id="note-text" placeholder="Observações, histórico, detalhes sobre este guia..."></textarea>
+    <span class="ponto-label">🎵 Link do Ponto Cantado</span>
+    <span class="ponto-obs">Adicione apenas pontos já ensinados pelos guias em sessão</span>
+    <input type="url" id="ponto-link-input" placeholder="https://pontoscantados.pages.dev/...">
     <div class="m-actions">
       <span class="save-ok" id="save-ok">✓ Salvo</span>
       <button class="btn btn-ghost" id="m-close">Cancelar</button>
@@ -552,7 +563,7 @@
     });
   }
 
-  let partners = [], currentPartner = null, noteCache = {}, curKey = null;
+  let partners = [], currentPartner = null, noteCache = {}, pontoLinkCache = {}, curKey = null;
 
   /* ---- RENDER CARDS ---- */
   function renderCards(list) {
@@ -616,6 +627,7 @@
     ];
     await Promise.all(allKeys.map(async k => {
       if (noteCache[k] === undefined) noteCache[k] = await getNote(k);
+      if (pontoLinkCache[k] === undefined) pontoLinkCache[k] = await getNote('ponto:' + k);
     }));
 
     body.innerHTML = '';
@@ -689,6 +701,7 @@
     document.getElementById('m-gname').textContent = guide._nome || (guide.key ? p[guide.key] : '');
     document.getElementById('m-for').innerHTML = `Filha: <span>${p.name}</span>`;
     document.getElementById('note-text').value = noteCache[k] || '';
+    document.getElementById('ponto-link-input').value = pontoLinkCache[k] || '';
     document.getElementById('save-ok').classList.remove('on');
     document.getElementById('m-save').textContent = 'Salvar nota';
     document.getElementById('m-save').disabled = false;
@@ -710,8 +723,11 @@
     const btn = document.getElementById('m-save');
     btn.disabled = true; btn.textContent = '...';
     try {
+      const pontoLink = document.getElementById('ponto-link-input').value.trim();
       await putNote(curKey, txt);
+      await putNote('ponto:' + curKey, pontoLink);
       noteCache[curKey] = txt;
+      pontoLinkCache[curKey] = pontoLink;
       // Update dot in panel
       const row = document.querySelector(`[data-key="${curKey}"] .note-dot`);
       if (row) row.classList.toggle('on', !!txt);
