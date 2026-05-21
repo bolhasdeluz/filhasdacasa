@@ -118,6 +118,12 @@
     #ponto-link-input { width:100%;background:var(--surface2);border:1px solid var(--pink-bd);border-radius:8px;padding:9px 12px;color:var(--text);font-size:0.88rem;font-family:inherit;outline:none;transition:border-color 0.2s; }
     #ponto-link-input:focus { border-color:var(--pink); }
     #ponto-link-input::placeholder { color:var(--dim); }
+
+    .yt-mini-wrap { margin-top:10px; border-radius:8px; overflow:hidden; background:#000; aspect-ratio:16/5; display:none; }
+    .yt-mini-wrap.open { display:block; }
+    .yt-mini-wrap iframe { width:100%; height:100%; border:none; display:block; }
+    .yt-play-btn { display:inline-flex; align-items:center; gap:5px; margin-top:8px; background:rgba(184,64,64,0.08); border:1px solid rgba(184,64,64,0.3); color:#c0392b; padding:5px 12px; border-radius:5px; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+    .yt-play-btn:hover { background:rgba(184,64,64,0.15); border-color:rgba(184,64,64,0.6); }
     .m-actions { display:flex;gap:0.6rem;margin-top:0.9rem;align-items:center; }
     .save-ok { font-size:0.75rem;color:var(--pink);margin-right:auto;opacity:0;transition:opacity 0.3s;flex:1; }
     .save-ok.on { opacity:1; }
@@ -141,6 +147,12 @@
   </style>
 </head>
 <body>
+
+<header>
+  <a href="https://www.bolhasdeluz.com/" class="btn-back">← Voltar ao site do terreiro</a>
+  <h1>Filhas da Casa</h1>
+  <p class="sub">consulta de guias</p>
+</header>
 
 <div class="search-wrap">
   <input type="search" id="search" placeholder="🔍  Buscar por nome ou cargo..." autocomplete="off">
@@ -173,7 +185,9 @@
     <textarea id="note-text" placeholder="Observações, histórico, detalhes sobre este guia..."></textarea>
     <span class="ponto-label">🎵 Link do Ponto Cantado</span>
     <span class="ponto-obs">Adicione apenas pontos já ensinados pelos guias em sessão</span>
-    <input type="url" id="ponto-link-input" placeholder="https://pontoscantados.pages.dev/...">
+    <input type="url" id="ponto-link-input" placeholder="https://pontoscantados.pages.dev/..." oninput="updateMiniPlayer(this.value)">
+    <button class="yt-play-btn" id="yt-play-btn" style="display:none" onclick="toggleMiniPlayer()">▶ Tocar ponto</button>
+    <div class="yt-mini-wrap" id="yt-mini-player"></div>
     <div class="m-actions">
       <span class="save-ok" id="save-ok">✓ Salvo</span>
       <button class="btn btn-ghost" id="m-close">Cancelar</button>
@@ -309,6 +323,8 @@
     document.getElementById('m-for').innerHTML = `Filha: <span>${p.name}</span>`;
     document.getElementById('note-text').value = noteCache[k] || '';
     document.getElementById('ponto-link-input').value = pontoLinkCache[k] || '';
+    document.getElementById('yt-mini-player').classList.remove('open');
+    updateMiniPlayer(pontoLinkCache[k] || '');
     document.getElementById('save-ok').classList.remove('on');
     document.getElementById('m-save').textContent = 'Salvar nota';
     document.getElementById('m-save').disabled = false;
@@ -357,6 +373,33 @@
       document.getElementById('loading').innerHTML = '<p style="color:rgba(255,255,255,0.7);font-size:0.9rem;">Não foi possível carregar os dados.<br>Verifique as variáveis de ambiente.</p>';
     }
   })();
+
+  function extractYtId(url) {
+    if (!url) return null;
+    const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  function updateMiniPlayer(url) {
+    const ytId = extractYtId(url);
+    const wrap = document.getElementById('yt-mini-player');
+    const btn = document.getElementById('yt-play-btn');
+    if (ytId) {
+      wrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1" allowfullscreen allow="autoplay"></iframe>`;
+      btn.style.display = 'inline-flex';
+    } else {
+      wrap.classList.remove('open');
+      wrap.innerHTML = '';
+      btn.style.display = 'none';
+    }
+  }
+
+  function toggleMiniPlayer() {
+    const wrap = document.getElementById('yt-mini-player');
+    const btn = document.getElementById('yt-play-btn');
+    const isOpen = wrap.classList.toggle('open');
+    btn.textContent = isOpen ? '⏹ Fechar player' : '▶ Tocar ponto';
+  }
 })();
 </script>
 </body>
