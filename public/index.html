@@ -1,770 +1,703 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Filhas da Casa</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:       #080C18;
-      --s1:       #0F1524;
-      --s2:       #161E34;
-      --s3:       #1E2847;
-      --border:   rgba(255,255,255,0.07);
-      --gold:     #C9973A;
-      --gold2:    #E8C06A;
-      --purple:   #7C5CDB;
-      --purple2:  #A88BF4;
-      --text:     #EDE9F8;
-      --muted:    #8A8AB0;
-      --dim:      #4A4A70;
-      --r:        14px;
-      --pw:       370px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Nunito', sans-serif;
-      min-height: 100vh;
-      padding-bottom: 4rem;
-      overflow-x: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário de Sessões — Bolhas de Luz</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0b14;
+    --surface: #171423;
+    --surface2: #1e1a2e;
+    --border: rgba(180,140,80,0.18);
+    --gold: #c9963c;
+    --gold-light: #e8bf72;
+    --gold-dim: rgba(201,150,60,0.12);
+    --text: #e8dcc8;
+    --text-dim: rgba(232,220,200,0.55);
+    --red: #b84040;
+    --red-dim: rgba(184,64,64,0.12);
 
-    /* HEADER */
-    .btn-back{display:inline-block;margin-bottom:14px;font-family:inherit;font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.15);padding:5px 14px;border-radius:20px;transition:all 0.2s}.btn-back:hover{border-color:#C9973A;color:#C9973A}
-    header {
-      padding: 3rem 2rem 0.5rem;
-      text-align: center;
-      position: relative;
-    }
-    header::before {
-      content: '';
-      position: absolute;
-      top: -40px; left: 50%; transform: translateX(-50%);
-      width: 500px; height: 350px;
-      background: radial-gradient(ellipse, rgba(124,92,219,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    header h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.2rem, 5vw, 3.2rem);
-      font-weight: 500;
-      color: var(--gold2);
-      letter-spacing: 0.06em;
-      position: relative;
-    }
-    header .sub {
-      font-size: 0.72rem;
-      color: var(--dim);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      margin-top: 0.5rem;
-    }
+    --interna:   #4a6fa5;
+    --atendimento: #6a9e6a;
+    --visita:    #9e6a9e;
+    --familia:   #c9963c;
+    --reuniao:   #6a8fa5;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Crimson Pro',Georgia,serif; font-size:17px; min-height:100vh; }
 
-    /* SEARCH */
-    .search-wrap {
-      max-width: 440px;
-      margin: 2rem auto 0;
-      padding: 0 1.5rem;
-    }
-    .search-wrap input {
-      width: 100%;
-      background: var(--s1);
-      border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 0.7rem 1.3rem;
-      color: var(--text);
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .search-wrap input::placeholder { color: var(--dim); }
-    .search-wrap input:focus {
-      border-color: var(--purple);
-      box-shadow: 0 0 0 3px rgba(124,92,219,0.12);
-    }
+  /* HEADER */
+  header { background:linear-gradient(180deg,#110e1c 0%,transparent 100%); border-bottom:1px solid var(--border); padding:20px 24px 18px; text-align:center; position:relative; }
+  header::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+  .btn-back { display:inline-block; margin-bottom:12px; font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.1em; color:var(--text-dim); text-decoration:none; border:1px solid var(--border); padding:5px 14px; border-radius:20px; transition:all 0.2s; }
+  .btn-back:hover { border-color:var(--gold); color:var(--gold); }
+  .header-ornament { font-size:13px; color:var(--gold); opacity:0.4; letter-spacing:12px; margin-bottom:5px; }
+  h1 { font-family:'Cinzel',serif; font-size:clamp(20px,4vw,30px); font-weight:700; letter-spacing:0.08em; color:var(--gold-light); text-shadow:0 0 40px rgba(201,150,60,0.3); }
+  .header-sub { font-size:10px; color:var(--text-dim); letter-spacing:0.18em; text-transform:uppercase; margin-top:4px; font-family:'Cinzel',serif; }
 
-    /* GRID */
-    #grid {
-      max-width: 1060px;
-      margin: 1.8rem auto 0;
-      padding: 0 1.5rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 1rem;
-    }
+  /* CONTROLS */
+  .controls { max-width:960px; margin:18px auto 0; padding:0 16px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .filter-btn { background:var(--surface); border:1px solid var(--border); color:var(--text-dim); padding:8px 13px; border-radius:6px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.08em; transition:all 0.2s; white-space:nowrap; display:flex; align-items:center; gap:5px; }
+  .filter-btn:hover { border-color:var(--gold); color:var(--gold); }
+  .filter-btn.active { background:var(--gold-dim); border-color:var(--gold); color:var(--gold-light); }
+  .filter-btn .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .dot-interna { background:var(--interna); }
+  .dot-atendimento { background:var(--atendimento); }
+  .dot-visita { background:var(--visita); }
+  .dot-familia { background:var(--familia); }
+  .dot-reuniao { background:var(--reuniao); }
+  .spacer { flex:1; }
+  .btn-add { background:var(--gold); border:none; color:#0d0b14; padding:8px 18px; border-radius:6px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.08em; font-weight:700; transition:all 0.2s; white-space:nowrap; }
+  .btn-add:hover { background:var(--gold-light); }
 
-    /* CARD */
-    .card {
-      background: var(--s1);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 1.3rem 1.2rem 1.1rem;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      animation: fadeUp 0.4s ease both;
-      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 48px rgba(124,92,219,0.18);
-      border-color: rgba(124,92,219,0.35);
-    }
-    .card-avatar {
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: var(--s3);
-      border: 2px solid var(--border);
-      display: block;
-      margin-bottom: 0.85rem;
-    }
-    .card-avatar-placeholder {
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: var(--s3);
-      border: 2px solid var(--border);
-      margin-bottom: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-    }
-    .card-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 0.2rem;
-      line-height: 1.3;
-    }
-    .card-cargo {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.5rem;
-    }
-    .card-tempo {
-      font-size: 0.78rem;
-      color: var(--gold);
-      font-weight: 600;
-      margin-bottom: 0.85rem;
-    }
-    .card-guides {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.3rem;
-    }
-    .guide-chip {
-      font-size: 0.75rem;
-      padding: 0.12rem 0.5rem;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.04);
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,0.05);
-      cursor: default;
-    }
-    .card-cta {
-      position: absolute;
-      bottom: 1rem; right: 1.1rem;
-      font-size: 0.68rem;
-      color: var(--purple2);
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
-    }
-    .card:hover .card-cta { opacity: 1; }
+  /* MAIN LAYOUT */
+  .main { max-width:720px; margin:18px auto 60px; padding:0 16px; }
 
-    /* LOADING */
-    #loading {
-      text-align: center;
-      padding: 5rem 2rem;
-      color: var(--muted);
-    }
-    .spinner {
-      width: 36px; height: 36px;
-      border: 2px solid var(--s3);
-      border-top-color: var(--purple);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin: 0 auto 1rem;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+  /* SIDEBAR LIST */
+  .sessoes-list { display:flex; flex-direction:column; gap:8px; }
+  .mes-header { font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; padding:16px 2px 6px; border-bottom:1px solid var(--border); margin-bottom:2px; }
+  .mes-header:first-child { padding-top:4px; }
 
-    /* OVERLAY */
-    #overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(3px);
-      z-index: 100;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    #overlay.on { opacity: 1; pointer-events: all; }
+  .sessao-item { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; border-left:3px solid var(--gold); transition:all 0.2s; animation:fadeIn 0.25s ease both; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+  .sessao-item:hover { border-color:rgba(201,150,60,0.35); }
+  .sessao-item.tipo-interna { border-left-color:var(--interna); }
+  .sessao-item.tipo-atendimento { border-left-color:var(--atendimento); }
+  .sessao-item.tipo-visita { border-left-color:var(--visita); }
+  .sessao-item.tipo-familia { border-left-color:var(--familia); }
 
-    /* GUIDE PANEL */
-    #guide-panel {
-      position: fixed;
-      top: 0; right: 0; bottom: 0;
-      width: var(--pw);
-      max-width: 100vw;
-      background: var(--s1);
-      border-left: 1px solid var(--border);
-      z-index: 110;
-      transform: translateX(100%);
-      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-      display: flex;
-      flex-direction: column;
-    }
-    #guide-panel.open { transform: translateX(0); }
+  .si-header { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .si-date { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
+  .si-day-num { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:var(--gold-light); line-height:1; }
+  .si-day-info { display:flex; flex-direction:column; gap:1px; }
+  .si-dow { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.12em; color:var(--gold); text-transform:uppercase; }
+  .si-time { font-family:'Cinzel',serif; font-size:9px; color:var(--text-dim); letter-spacing:0.08em; }
+  .si-name { font-family:'Cinzel',serif; font-size:13px; color:var(--gold-light); line-height:1.2; }
+  .si-tipo { font-size:9px; font-family:'Cinzel',serif; letter-spacing:0.1em; text-transform:uppercase; margin-top:4px; opacity:0.7; }
+  .si-tipo.tipo-interna { color:var(--interna); }
+  .si-tipo.tipo-atendimento { color:var(--atendimento); }
+  .si-tipo.tipo-visita { color:var(--visita); }
+  .si-tipo.tipo-familia { color:var(--familia); }
+  .si-desc { font-size:13px; color:var(--text-dim); margin-top:5px; font-style:italic; line-height:1.5; }
+  .si-resp { font-size:12px; color:var(--text-dim); margin-top:4px; }
+  .si-actions { display:flex; gap:4px; flex-shrink:0; }
+  .icon-btn { background:none; border:1px solid var(--border); color:var(--text-dim); width:24px; height:24px; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:11px; transition:all 0.18s; }
+  .icon-btn:hover { border-color:var(--gold); color:var(--gold); }
+  .icon-btn.del:hover { border-color:var(--red); color:var(--red); background:var(--red-dim); }
 
-    .panel-hd {
-      padding: 1.4rem 1.4rem 1.1rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .panel-hd img, .panel-hd .phd-ph {
-      width: 46px; height: 46px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: var(--s3);
-      border: 1px solid var(--border);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-    .panel-hd-info { flex: 1; min-width: 0; }
-    .panel-hd-info h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .panel-hd-info p { font-size: 0.72rem; color: var(--muted); }
-    .panel-hd-info .ptempo { font-size: 0.75rem; color: var(--gold); font-weight: 600; margin-top: 0.15rem; }
-    .panel-close {
-      background: none; border: none;
-      color: var(--muted); cursor: pointer;
-      font-size: 1rem; padding: 0.4rem;
-      border-radius: 6px;
-      transition: color 0.2s, background 0.2s;
-      flex-shrink: 0;
-    }
-    .panel-close:hover { color: var(--text); background: var(--s2); }
+  .empty { text-align:center; padding:30px 20px; color:var(--text-dim); font-size:14px; }
 
-    .panel-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1.1rem 1.2rem;
-    }
-    .panel-body::-webkit-scrollbar { width: 3px; }
-    .panel-body::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 3px; }
+  /* MODAL */
+  .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.72); z-index:100; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); }
+  .overlay.open { display:flex; }
+  .modal { background:var(--surface2); border:1px solid var(--border); border-top:2px solid var(--gold); border-radius:12px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; padding:24px 20px; position:relative; }
+  .modal h2 { font-family:'Cinzel',serif; font-size:16px; color:var(--gold-light); margin-bottom:18px; letter-spacing:0.06em; }
+  .form-row { margin-bottom:13px; }
+  label { display:block; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:5px; }
+  input[type=text],input[type=date],input[type=time],input[type=password],textarea,select { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:9px 11px; border-radius:6px; font-family:'Crimson Pro',serif; font-size:16px; outline:none; transition:border-color 0.2s; }
+  input:focus,textarea:focus,select:focus { border-color:var(--gold); }
+  input[type=date]::-webkit-calendar-picker-indicator,
+  input[type=time]::-webkit-calendar-picker-indicator {
+    filter: invert(0.6) sepia(1) saturate(2) hue-rotate(5deg);
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  input[type=date]::-webkit-calendar-picker-indicator:hover,
+  input[type=time]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 
-    .panel-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--dim);
-      margin-bottom: 0.65rem;
-      margin-top: 0.8rem;
-    }
-    .panel-label:first-child { margin-top: 0; }
+  textarea { resize:vertical; min-height:80px; line-height:1.6; }
+  select option { background:#1e1a2e; }
+  .row-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .modal-footer { display:flex; justify-content:flex-end; gap:8px; margin-top:18px; }
+  .btn-cancel { background:none; border:1px solid var(--border); color:var(--text-dim); padding:8px 16px; border-radius:6px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.08em; transition:all 0.2s; }
+  .btn-cancel:hover { border-color:var(--red); color:var(--red); }
+  .btn-save { background:var(--gold); border:none; color:#0d0b14; padding:8px 20px; border-radius:6px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.08em; font-weight:700; transition:all 0.2s; }
+  .btn-save:hover { background:var(--gold-light); }
+  .btn-close-modal { position:absolute; top:14px; right:14px; background:none; border:1px solid var(--border); color:var(--text-dim); width:26px; height:26px; border-radius:4px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+  .btn-close-modal:hover { border-color:var(--red); color:var(--red); }
+  .senha-err { color:#e07070; font-size:12px; margin-top:5px; display:none; }
 
-    /* GUIDE ROW */
-    .guide-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.7rem 0.8rem;
-      border-radius: 10px;
-      background: var(--s2);
-      border: 1px solid var(--border);
-      margin-bottom: 0.45rem;
-      cursor: pointer;
-      transition: background 0.18s, border-color 0.18s, transform 0.15s;
-    }
-    .guide-row:hover {
-      background: var(--s3);
-      border-color: rgba(124,92,219,0.3);
-      transform: translateX(2px);
-    }
-    .guide-icon {
-      font-size: 1.1rem;
-      width: 30px; height: 30px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,0.04);
-      border-radius: 7px;
-      flex-shrink: 0;
-    }
-    .guide-row-info { flex: 1; min-width: 0; }
-    .guide-row-type {
-      font-size: 0.62rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-    .guide-row-name {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .note-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .note-dot.on { opacity: 1; }
-    .guide-arrow { font-size: 0.8rem; color: var(--dim); }
+  /* TOAST */
+  .toast { position:fixed; bottom:20px; right:20px; background:var(--surface2); border:1px solid var(--gold); color:var(--gold-light); padding:9px 15px; border-radius:7px; font-family:'Cinzel',serif; font-size:10px; letter-spacing:.08em; z-index:200; opacity:0; transform:translateY(8px); transition:all .25s; pointer-events:none; }
+  .toast.show { opacity:1; transform:translateY(0); }
 
-    /* NOTES MODAL */
-    #notes-modal {
-      position: fixed; inset: 0;
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
-    }
-    #notes-modal.open { opacity: 1; pointer-events: all; }
-    .mbackdrop {
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-    }
-    .mbox {
-      position: relative;
-      background: var(--s1);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 430px;
-      padding: 1.8rem;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-      transform: scale(0.95) translateY(10px);
-      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-    }
-    #notes-modal.open .mbox { transform: scale(1) translateY(0); }
-    .m-icon { font-size: 2rem; margin-bottom: 0.6rem; }
-    .m-type {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-    .m-guide-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: var(--gold2);
-      margin-bottom: 0.3rem;
-    }
-    .m-for {
-      font-size: 0.75rem;
-      color: var(--dim);
-      margin-bottom: 1.2rem;
-    }
-    .m-for span { color: var(--purple2); }
-    #note-text {
-      width: 100%;
-      min-height: 130px;
-      background: var(--s2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.88rem;
-      padding: 0.85rem 1rem;
-      resize: vertical;
-      outline: none;
-      transition: border-color 0.2s;
-      line-height: 1.65;
-    }
-    #note-text::placeholder { color: var(--dim); }
-    #note-text:focus { border-color: var(--purple); }
-    .m-actions {
-      display: flex;
-      gap: 0.6rem;
-      margin-top: 0.9rem;
-      align-items: center;
-    }
-
-    .ponto-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin:14px 0 6px; display:block; }
-    .ponto-obs { font-size:0.75rem; color:var(--muted); font-style:italic; margin-bottom:6px; opacity:0.7; }
-    #ponto-link-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px 14px; color:var(--text); font-size:0.9rem; font-family:inherit; outline:none; transition:border-color 0.2s; }
-    #ponto-link-input:focus { border-color:var(--gold); }
-    #ponto-link-input::placeholder { color:var(--dim); }
-    .ponto-link-btn { display:inline-flex; align-items:center; gap:5px; margin-top:5px; font-size:0.75rem; color:var(--gold); text-decoration:none; opacity:0.8; transition:opacity 0.2s; }
-    .ponto-link-btn:hover { opacity:1; }
-    .save-ok {
-      font-size: 0.75rem;
-      color: var(--gold);
-      margin-right: auto;
-      opacity: 0;
-      transition: opacity 0.3s;
-      flex: 1;
-    }
-    .save-ok.on { opacity: 1; }
-    .btn {
-      padding: 0.52rem 1.1rem;
-      border-radius: 8px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.83rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: background 0.2s, transform 0.12s;
-    }
-    .btn:active { transform: scale(0.96); }
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-    .btn-ghost:hover { background: var(--s2); color: var(--text); }
-    .btn-primary { background: var(--purple); color: #fff; }
-    .btn-primary:hover { background: var(--purple2); }
-    .btn-primary:disabled { opacity: 0.5; cursor: default; }
-
-    /* EMPTY */
-    .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 0.9rem; }
-
-    /* MOBILE */
-    @media (max-width: 520px) {
-      :root { --pw: 100vw; }
-      #guide-panel {
-        top: auto;
-        border-left: none;
-        border-top: 1px solid var(--border);
-        border-radius: 20px 20px 0 0;
-        height: 82vh;
-      }
-      #guide-panel { transform: translateY(100%); }
-      #guide-panel.open { transform: translateY(0); }
-    }
-  </style>
+  .btn-agenda { display:inline-flex; align-items:center; gap:5px; margin-top:8px; background:rgba(201,150,60,0.08); border:1px solid rgba(201,150,60,0.25); color:var(--gold); padding:5px 12px; border-radius:5px; text-decoration:none; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.1em; cursor:pointer; transition:all 0.2s; }
+  .btn-agenda:hover { background:rgba(201,150,60,0.16); border-color:var(--gold); }
+  .tambor-badge { display:inline-flex; align-items:center; gap:4px; margin-top:5px; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.08em; padding:2px 9px; border-radius:20px; }
+  .tambor-confirmado { background:rgba(106,158,106,0.12); border:1px solid rgba(106,158,106,0.3); color:#8ecf8e; }
+  .tambor-arrecadacao { background:rgba(201,150,60,0.12); border:1px solid rgba(201,150,60,0.3); color:var(--gold); }
+  .tambor-nao { background:rgba(184,64,64,0.1); border:1px solid rgba(184,64,64,0.25); color:#e07070; }
+  .btn-import { background:none; border:1px solid var(--border); color:var(--text-dim); padding:8px 14px; border-radius:6px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.08em; transition:all 0.2s; white-space:nowrap; }
+  .btn-import:hover { border-color:var(--gold); color:var(--gold); }
+  .import-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:200; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); }
+  .import-overlay.open { display:flex; }
+  .import-modal { background:var(--surface2); border:1px solid var(--border); border-top:2px solid var(--gold); border-radius:12px; width:100%; max-width:560px; max-height:85vh; display:flex; flex-direction:column; padding:22px 20px; position:relative; }
+  .import-modal h2 { font-family:'Cinzel',serif; font-size:15px; color:var(--gold-light); margin-bottom:6px; letter-spacing:0.06em; }
+  .import-sub { font-size:13px; color:var(--text-dim); margin-bottom:14px; }
+  .import-list { overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+  .import-item { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:10px; font-size:13px; }
+  .import-item input[type=checkbox] { accent-color:var(--gold); width:15px; height:15px; flex-shrink:0; cursor:pointer; }
+  .import-item-info { flex:1; min-width:0; }
+  .import-item-name { color:var(--text); font-family:'Cinzel',serif; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .import-item-date { color:var(--text-dim); font-size:11px; margin-top:1px; }
+  .import-footer { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .import-senha { flex:1; min-width:140px; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:8px 11px; border-radius:6px; font-family:'Crimson Pro',serif; font-size:15px; outline:none; }
+  .import-senha:focus { border-color:var(--gold); }
+  .import-count { font-family:'Cinzel',serif; font-size:9px; color:var(--text-dim); letter-spacing:0.08em; }
+  .btn-sel-all { background:none; border:1px solid var(--border); color:var(--text-dim); padding:6px 12px; border-radius:5px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.06em; transition:all 0.2s; }
+  .btn-sel-all:hover { border-color:var(--gold); color:var(--gold); }
+  .loading { text-align:center; padding:40px; color:var(--text-dim); }
+  .spinner { width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 10px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+</style>
 </head>
 <body>
 
 <header>
   <a href="https://www.bolhasdeluz.com/" class="btn-back">← Voltar ao site do terreiro</a>
-  <h1>Filhas da Casa</h1>
-  <p class="sub">consulta de guias</p>
+  <div class="header-ornament">✦ ✦ ✦</div>
+  <h1>Calendário de Sessões</h1>
+  <div class="header-sub">Terreiro de Umbanda e Quimbanda Bolhas de Luz</div>
 </header>
 
-<div class="search-wrap">
-  <input type="search" id="search" placeholder="🔍  Buscar por nome ou cargo..." autocomplete="off">
+<div class="controls">
+  <button class="filter-btn active" id="fTodos" onclick="setFiltro('')">Todos</button>
+  <button class="filter-btn" id="fInterna" onclick="setFiltro('Interna')"><span class="dot dot-interna"></span>Internas</button>
+  <button class="filter-btn" id="fAtendimento" onclick="setFiltro('Atendimento')"><span class="dot dot-atendimento"></span>Atendimento</button>
+  <button class="filter-btn" id="fVisita" onclick="setFiltro('Visita')"><span class="dot dot-visita"></span>Visita</button>
+  <button class="filter-btn" id="fFamilia" onclick="setFiltro('Familia')"><span class="dot dot-familia"></span>Família</button>
+  <button class="filter-btn" id="fReuniao" onclick="setFiltro('Reuniao')"><span class="dot dot-reuniao"></span>Reunião</button>
+  <div class="spacer"></div>
+  <input type="file" id="icsInput" accept=".ics" style="display:none" onchange="importarICS(this)">
+  <button class="btn-import" onclick="document.getElementById('icsInput').click()">⬆ Importar .ics</button>
+  <button class="btn-add" onclick="openModal()">+ Nova Sessão</button>
 </div>
 
-<div id="loading">
-  <div class="spinner"></div>
-  <p>Carregando...</p>
-</div>
-
-<div id="grid" style="display:none;"></div>
-
-<div id="overlay"></div>
-
-<div id="guide-panel">
-  <div class="panel-hd">
-    <div id="phd-avatar"></div>
-    <div class="panel-hd-info">
-      <h2 id="phd-name"></h2>
-      <p id="phd-cargo"></p>
-      <p class="ptempo" id="phd-tempo"></p>
-    </div>
-    <button class="panel-close" id="panel-close">✕</button>
-  </div>
-  <div class="panel-body" id="panel-body"></div>
-</div>
-
-<div id="notes-modal">
-  <div class="mbackdrop" id="mbackdrop"></div>
-  <div class="mbox">
-    <div class="m-icon" id="m-icon"></div>
-    <div class="m-type" id="m-type"></div>
-    <div class="m-guide-name" id="m-gname"></div>
-    <div class="m-for" id="m-for"></div>
-    <textarea id="note-text" placeholder="Observações, histórico, detalhes sobre este guia..."></textarea>
-    <span class="ponto-label">🎵 Link do Ponto Cantado</span>
-    <span class="ponto-obs">Adicione apenas pontos já ensinados pelos guias em sessão</span>
-    <input type="url" id="ponto-link-input" placeholder="https://pontoscantados.pages.dev/...">
-    <div class="m-actions">
-      <span class="save-ok" id="save-ok">✓ Salvo</span>
-      <button class="btn btn-ghost" id="m-close">Cancelar</button>
-      <button class="btn btn-primary" id="m-save">Salvar nota</button>
-    </div>
+<div class="main">
+  <div class="sessoes-list" id="sidebarList">
+    <div class="loading"><div class="spinner"></div></div>
   </div>
 </div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="btn-close-modal" onclick="closeModal()">✕</button>
+    <h2 id="modalTitle">Nova Sessão</h2>
+    <input type="hidden" id="editId">
+
+    <div class="form-row">
+      <label>Nome da Sessão *</label>
+      <input type="text" id="fNome" placeholder="ex: Gira de Pretos Velhos...">
+    </div>
+    <div class="row-2">
+      <div class="form-row">
+        <label>Data *</label>
+        <input type="date" id="fData">
+      </div>
+      <div class="form-row">
+        <label>Hora</label>
+        <input type="time" id="fHora">
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Tipo de Sessão *</label>
+      <select id="fTipo">
+        <option value="">— Selecionar —</option>
+        <option value="Interna">Sessão Interna</option>
+        <option value="Atendimento">Sessão com Atendimento</option>
+        <option value="Visita">Sessão de Visita</option>
+        <option value="Familia">Sessão da Família</option>
+        <option value="Reuniao">Reunião</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Descrição / Observações</label>
+      <textarea id="fDesc" placeholder="Detalhes, avisos, o que levar..."></textarea>
+    </div>
+    <div class="form-row">
+      <label>Responsável</label>
+      <input type="text" id="fResp" placeholder="Quem organiza essa sessão...">
+    </div>
+    <div class="form-row">
+      <label>Tambor</label>
+      <select id="fTambor">
+        <option value="">— Sem informação —</option>
+        <option value="confirmado">✅ Confirmado</option>
+        <option value="arrecadacao">🪘 Depende de arrecadação extra</option>
+        <option value="nao">❌ Não vai ter</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Senha</label>
+      <input type="password" id="fSenha" placeholder="Digite a senha do terreiro">
+      <div class="senha-err" id="senhaErr">Senha incorreta, tente novamente.</div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="salvar()">Salvar Sessão</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="import-overlay" id="importOverlay">
+  <div class="import-modal">
+    <button class="btn-close-modal" onclick="fecharImport()">✕</button>
+    <h2>Importar do Google Calendar</h2>
+    <div class="import-sub" id="importSub">Carregando eventos...</div>
+    <div class="import-list" id="importList"></div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+      <button class="btn-sel-all" onclick="selecionarTodos(true)">Selecionar todos</button>
+      <button class="btn-sel-all" onclick="selecionarTodos(false)">Desmarcar todos</button>
+      <span class="import-count" id="importCount"></span>
+    </div>
+    <div class="import-footer">
+      <input type="password" class="import-senha" id="importSenha" placeholder="Senha do terreiro">
+      <button class="btn-cancel" onclick="fecharImport()">Cancelar</button>
+      <button class="btn-save" onclick="confirmarImport()">Importar selecionados</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-(function () {
-  const GUIDES = [
-    { key: 'x_studio_caboclo',     type: 'Caboclo',     icon: '🏹' },
-    { key: 'x_studio_exu',         type: 'Exu',         icon: '🔱' },
-    { key: 'x_studio_pomba_gira',  type: 'Pomba Gira',  icon: '🌹' },
-    { key: 'x_studio_preto_velho', type: 'Preto Velho', icon: '🕯️' },
-    { key: 'x_studio_cigana',      type: 'Cigana',      icon: '🔮' },
-    { key: 'x_studio_cosme',       type: 'Cosme',       icon: '⭐' },
-  ];
+  const API = '/api/sessoes';
+  let sessoes = [];
+  let filtroTipo = '';
+  let selectedDate = null;
 
-  function tempo(d) {
-    if (!d) return null;
-    const s = new Date(d + 'T12:00:00'), n = new Date();
-    let y = n.getFullYear() - s.getFullYear();
-    let m = n.getMonth() - s.getMonth();
-    let dd = n.getDate() - s.getDate();
-    if (dd < 0) { m--; dd += new Date(n.getFullYear(), n.getMonth(), 0).getDate(); }
-    if (m  < 0) { y--; m += 12; }
-    const p = [];
-    if (y > 0) p.push(y + (y === 1 ? ' ano' : ' anos'));
-    if (m > 0) p.push(m + (m === 1 ? ' mês' : ' meses'));
-    return p.length ? p.join(' e ') : (dd > 0 ? dd + ' dia(s)' : 'Hoje!');
-  }
+  const hoje = new Date();
+  let viewYear = hoje.getFullYear();
+  let viewMonth = hoje.getMonth();
 
-  function nk(id, key) { return `p${id}_${key}`; }
+  const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const TIPO_LABEL = { Interna:'Sessão Interna', Atendimento:'Sessão com Atendimento', Visita:'Sessão de Visita', Familia:'Sessão da Família', Reuniao:'Reunião' };
 
-  async function getNote(k) {
-    try {
-      const r = await fetch(`/api/notes?key=${encodeURIComponent(k)}`);
-      return (await r.json()).text || '';
-    } catch { return ''; }
-  }
 
-  async function putNote(k, txt) {
-    await fetch('/api/notes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: k, text: txt })
-    });
-  }
+  // ---- IMPORTAR ICS ----
+  let importEventos = [];
 
-  let partners = [], currentPartner = null, noteCache = {}, pontoLinkCache = {}, curKey = null;
+  window.importarICS = (input) => {
+    const file = input.files[0];
+    if (!file) return;
+    input.value = '';
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      importEventos = parseICS(e.target.result);
+      mostrarImport();
+    };
+    reader.readAsText(file);
+  };
 
-  /* ---- RENDER CARDS ---- */
-  function renderCards(list) {
-    const g = document.getElementById('grid');
-    g.innerHTML = '';
-    if (!list.length) { g.innerHTML = '<div class="empty">Nenhuma filha encontrada.</div>'; return; }
-    list.forEach((p, i) => {
-      const t = tempo(p.x_studio_data_da_iniciacao);
-      const guides = GUIDES.filter(g => p[g.key]);
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.style.animationDelay = (i * 0.035) + 's';
+  function parseICS(text) {
+    const eventos = [];
+    const blocks = text.split('BEGIN:VEVENT');
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
 
-      const avatarHTML = p.image_128
-        ? `<img class="card-avatar" src="data:image/png;base64,${p.image_128}" alt="">`
-        : `<div class="card-avatar-placeholder">✨</div>`;
+    for (let i = 1; i < blocks.length; i++) {
+      const block = blocks[i];
 
-      const chips = guides.map(g => `<span class="guide-chip">${g.icon} ${g.type}</span>`).join('');
-      const passCount = (p.passagens_nomes || []).filter(Boolean).length;
-      const passChip = passCount ? `<span class="guide-chip">✨ ${passCount} passagen${passCount > 1 ? 's' : ''}</span>` : '';
+      const get = (key) => {
+        const match = block.match(new RegExp(key + '[^:]*:([^\r\n]+)'));
+        return match ? match[1].trim() : '';
+      };
 
-      card.innerHTML = `
-        ${avatarHTML}
-        <div class="card-name">${p.name || ''}</div>
-        ${p.function ? `<div class="card-cargo">${p.function}</div>` : ''}
-        ${t ? `<div class="card-tempo">⏳ ${t} de casa</div>` : ''}
-        ${chips || passChip ? `<div class="card-guides">${chips}${passChip}</div>` : ''}
-        <div class="card-cta">Ver guias →</div>
-      `;
-      card.addEventListener('click', () => openPanel(p));
-      g.appendChild(card);
-    });
-  }
+      const summary = get('SUMMARY') || 'Sem título';
+      const desc = get('DESCRIPTION');
+      const dtstart = get('DTSTART');
+      const rrule = get('RRULE');
 
-  /* ---- PANEL ---- */
-  async function openPanel(p) {
-    currentPartner = p;
-    const ava = document.getElementById('phd-avatar');
-    if (p.image_128) {
-      ava.innerHTML = `<img src="data:image/png;base64,${p.image_128}" style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:1px solid var(--border);">`;
-    } else {
-      ava.innerHTML = `<div class="phd-ph" style="width:46px;height:46px;border-radius:50%;background:var(--s3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">✨</div>`;
+      if (!dtstart) continue;
+
+      const datas = expandirDatas(dtstart, rrule, hoje);
+
+      datas.forEach(data => {
+        const hora = extrairHora(dtstart);
+        eventos.push({ nome: summary, data, hora, descricao: desc, tipo: '', tambor: '' });
+      });
     }
-    document.getElementById('phd-name').textContent = p.name || '';
-    document.getElementById('phd-cargo').textContent = p.function || '';
-    const t = tempo(p.x_studio_data_da_iniciacao);
-    document.getElementById('phd-tempo').textContent = t ? `⏳ ${t} de casa` : '';
 
-    const body = document.getElementById('panel-body');
-    body.innerHTML = '<div class="empty" style="padding:1.5rem 0"><div class="spinner" style="width:24px;height:24px;border-width:2px;"></div></div>';
+    // Sort by date and remove duplicates
+    eventos.sort((a,b) => a.data.localeCompare(b.data));
+    return eventos;
+  }
 
-    const active = GUIDES.filter(g => p[g.key]);
-    const passagens = (p.passagens_nomes || [])
-      .map((nome, i) => ({ nome, data: (p.passagens_datas || [])[i] || null }))
-      .filter(ps => ps.nome);
+  function extrairHora(dtstart) {
+    // DTSTART;TZID=...:20260101T210000 or DTSTART:20260101T210000Z
+    const t = dtstart.replace(/.*:/, '');
+    if (t.length >= 15) {
+      const h = t.slice(9,11);
+      const m = t.slice(11,13);
+      if (h && m && !isNaN(h) && !isNaN(m)) return `${h}:${m}`;
+    }
+    return '';
+  }
 
-    // Pre-load notes for all guides + passagens
-    const allKeys = [
-      ...active.map(g => nk(p.id, g.key)),
-      ...passagens.map((_, i) => nk(p.id, `passagem_${i}`))
-    ];
-    await Promise.all(allKeys.map(async k => {
-      if (noteCache[k] === undefined) noteCache[k] = await getNote(k);
-      if (pontoLinkCache[k] === undefined) pontoLinkCache[k] = await getNote('ponto:' + k);
-    }));
+  function expandirDatas(dtstart, rrule, hoje) {
+    const dataBase = parseDTSTART(dtstart);
+    if (!dataBase) return [];
 
-    body.innerHTML = '';
-    if (!active.length && !passagens.length) {
-      body.innerHTML = '<div class="empty">Nenhum guia registrado.</div>';
-    } else {
-      if (active.length) {
-        const lbl = document.createElement('p');
-        lbl.className = 'panel-label';
-        lbl.textContent = 'Guias — clique para ver ou adicionar notas';
-        body.appendChild(lbl);
-        active.forEach(g => {
-          const k = nk(p.id, g.key);
-          const row = document.createElement('div');
-          row.className = 'guide-row';
-          row.dataset.key = k;
-          row.innerHTML = `
-            <div class="guide-icon">${g.icon}</div>
-            <div class="guide-row-info">
-              <div class="guide-row-type">${g.type}</div>
-              <div class="guide-row-name">${p[g.key]}</div>
-            </div>
-            <div class="note-dot ${noteCache[k] ? 'on' : ''}" title="Tem notas"></div>
-            <div class="guide-arrow">›</div>
-          `;
-          row.addEventListener('click', () => openModal(p, { key: g.key, type: g.type, icon: g.icon, _nome: p[g.key] }, k));
-          body.appendChild(row);
+    const datas = [];
+    const limite = new Date(hoje);
+    limite.setMonth(limite.getMonth() + 18); // próximos 18 meses
+
+    if (!rrule) {
+      if (dataBase >= hoje) datas.push(fmtDate(dataBase));
+      return datas;
+    }
+
+    const freq = (rrule.match(/FREQ=([^;]+)/) || [])[1];
+    const untilStr = (rrule.match(/UNTIL=([^;]+)/) || [])[1];
+    const until = untilStr ? parseDTSTART(untilStr) : limite;
+    const intervalMatch = rrule.match(/INTERVAL=(\d+)/);
+    const interval = intervalMatch ? parseInt(intervalMatch[1]) : 1;
+
+    const cur = new Date(dataBase);
+
+    for (let iter = 0; iter < 200; iter++) {
+      if (cur > limite || (until && cur > until)) break;
+      if (cur >= hoje) datas.push(fmtDate(cur));
+
+      if (freq === 'YEARLY') cur.setFullYear(cur.getFullYear() + interval);
+      else if (freq === 'MONTHLY') cur.setMonth(cur.getMonth() + interval);
+      else if (freq === 'WEEKLY') cur.setDate(cur.getDate() + 7 * interval);
+      else if (freq === 'DAILY') cur.setDate(cur.getDate() + interval);
+      else break;
+    }
+
+    return datas;
+  }
+
+  function parseDTSTART(s) {
+    // Remove prefix like TZID=...: 
+    const raw = s.replace(/.*:/, '').replace(/Z$/, '');
+    if (raw.length < 8) return null;
+    const y = parseInt(raw.slice(0,4));
+    const m = parseInt(raw.slice(4,6)) - 1;
+    const d = parseInt(raw.slice(6,8));
+    return new Date(y, m, d);
+  }
+
+  function mostrarImport() {
+    document.getElementById('importOverlay').classList.add('open');
+    document.getElementById('importSub').textContent = `${importEventos.length} eventos futuros encontrados. Selecione os que deseja importar:`;
+    atualizarListaImport();
+  }
+
+  function atualizarListaImport() {
+    const list = document.getElementById('importList');
+    if (importEventos.length === 0) {
+      list.innerHTML = '<div class="empty">Nenhum evento futuro encontrado no arquivo.</div>';
+      return;
+    }
+    list.innerHTML = importEventos.map((ev, i) => {
+      const [y,m,d] = ev.data.split('-');
+      return `<div class="import-item">
+        <input type="checkbox" id="imp${i}" checked onchange="atualizarContador()">
+        <div class="import-item-info">
+          <div class="import-item-name">${esc(ev.nome)}</div>
+          <div class="import-item-date">${d}/${m}/${y}${ev.hora ? ' · ' + ev.hora : ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+    atualizarContador();
+  }
+
+  function atualizarContador() {
+    const total = importEventos.length;
+    const selecionados = document.querySelectorAll('#importList input:checked').length;
+    document.getElementById('importCount').textContent = `${selecionados} de ${total} selecionados`;
+  }
+
+  window.selecionarTodos = (val) => {
+    document.querySelectorAll('#importList input[type=checkbox]').forEach(c => c.checked = val);
+    atualizarContador();
+  };
+
+  window.fecharImport = () => {
+    document.getElementById('importOverlay').classList.remove('open');
+    document.getElementById('importSenha').value = '';
+  };
+
+  window.confirmarImport = async () => {
+    const senha = document.getElementById('importSenha').value;
+    if (!senha) { alert('Digite a senha do terreiro.'); return; }
+
+    const checkboxes = document.querySelectorAll('#importList input[type=checkbox]');
+    const selecionados = importEventos.filter((_, i) => checkboxes[i]?.checked);
+    if (selecionados.length === 0) { alert('Selecione ao menos um evento.'); return; }
+
+    const btn = document.querySelector('.import-overlay .btn-save');
+    btn.textContent = 'Importando...';
+    btn.disabled = true;
+
+    let ok = 0, err = 0;
+    for (const ev of selecionados) {
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ ...ev, senha })
         });
-      }
-      if (passagens.length) {
-        const lbl2 = document.createElement('p');
-        lbl2.className = 'panel-label';
-        lbl2.style.marginTop = active.length ? '1.2rem' : '0';
-        lbl2.textContent = 'Passagens — clique para ver ou adicionar notas';
-        body.appendChild(lbl2);
-        passagens.forEach((ps, i) => {
-          const k = nk(p.id, `passagem_${i}`);
-          const row = document.createElement('div');
-          row.className = 'guide-row';
-          row.dataset.key = k;
-          row.innerHTML = `
-            <div class="guide-icon">✨</div>
-            <div class="guide-row-info">
-              <div class="guide-row-type">Passagem${ps.data ? ' · ' + ps.data : ''}</div>
-              <div class="guide-row-name">${ps.nome}</div>
+        if (res.status === 403) { alert('Senha incorreta.'); btn.textContent='Importar selecionados'; btn.disabled=false; return; }
+        if (res.ok) { const j = await res.json(); sessoes.push(j); ok++; }
+        else err++;
+      } catch { err++; }
+    }
+
+    sessoes.sort((a,b)=>a.data.localeCompare(b.data));
+    fecharImport();
+    renderLista();
+    btn.textContent = 'Importar selecionados';
+    btn.disabled = false;
+    toast(`${ok} sessão(ões) importada(s)!${err ? ' ' + err + ' erros.' : ''}`);
+  };
+
+
+  function gerarICS(id) {
+    const s = sessoes.find(x => x.id === id);
+    if (!s) return;
+    const [y, m, d] = s.data.split('-');
+    const hora = s.hora || '20:30';
+    const [h, min] = hora.split(':');
+    const pad = n => String(n).padStart(2,'0');
+    const dtstart = `${y}${pad(m)}${pad(d)}T${pad(h)}${pad(min)}00`;
+    const endH = String(parseInt(h) + 2).padStart(2,'0');
+    const dtend = `${y}${pad(m)}${pad(d)}T${endH}${pad(min)}00`;
+    const TAMBOR_L = {confirmado:'Tambor: Confirmado', arrecadacao:'Tambor: Depende de arrecadacao', nao:'Tambor: Nao vai ter'};
+    const desc = [
+      s.tipo ? ('Tipo: ' + (TIPO_LABEL[s.tipo]||s.tipo)) : '',
+      s.tambor ? (TAMBOR_L[s.tambor]||'') : '',
+      s.responsavel ? ('Responsavel: ' + s.responsavel) : '',
+      s.descricao || ''
+    ].filter(Boolean).join('\\n');
+    const CRLF = '\r\n';
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Bolhas de Luz//Calendario//PT',
+      'BEGIN:VEVENT',
+      'DTSTART;TZID=America/Sao_Paulo:' + dtstart,
+      'DTEND;TZID=America/Sao_Paulo:' + dtend,
+      'SUMMARY:' + s.nome,
+      'DESCRIPTION:' + desc,
+      'LOCATION:Terreiro Bolhas de Luz',
+      'UID:' + s.id + '@bolhasdeluz',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join(CRLF);
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = s.nome.replace(/[^a-z0-9]/gi, '-') + '.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  window.gerarICS = gerarICS;
+
+  // ---- LOAD ----
+  async function load() {
+    try {
+      const res = await fetch(API);
+      sessoes = await res.json();
+      renderLista();
+    } catch(e) {
+      document.getElementById('sidebarList').innerHTML = '<div class="empty">Erro ao carregar.</div>';
+    }
+  }
+
+  // ---- FILTRO ----
+  window.setFiltro = (tipo) => {
+    filtroTipo = tipo;
+    selectedDate = null;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const map = {'':'fTodos','Interna':'fInterna','Atendimento':'fAtendimento','Visita':'fVisita','Familia':'fFamilia','Reuniao':'fReuniao'};
+    document.getElementById(map[tipo]).classList.add('active');
+    renderLista();
+  };
+
+  // ---- CALENDÁRIO (removido) ----
+  window.mudarMes = (d) => {
+    viewMonth += d;
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    if (viewMonth < 0)  { viewMonth = 11; viewYear--; }
+    selectedDate = null;
+    renderLista();
+  };
+
+
+  function selectDay(dateStr) {
+    selectedDate = selectedDate === dateStr ? null : dateStr;
+    renderLista();
+  }
+
+  // ---- LISTA LATERAL ----
+  const DIAS_SEMANA = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const TAMBOR_LABEL = { confirmado:'✅ Tambor confirmado', arrecadacao:'🪘 Depende de arrecadação', nao:'❌ Sem tambor' };
+
+  function renderLista() {
+    const todayStr = fmtDate(hoje);
+    let lista = sessoes.filter(s => {
+      if (filtroTipo && s.tipo !== filtroTipo) return false;
+      return s.data >= todayStr;
+    });
+
+    const el = document.getElementById('sidebarList');
+    if (lista.length === 0) {
+      el.innerHTML = '<div class="empty">Nenhuma sessão encontrada.</div>';
+      return;
+    }
+
+    // Agrupa por mês
+    const grupos = {};
+    lista.forEach(s => {
+      const mesKey = s.data.slice(0, 7);
+      if (!grupos[mesKey]) grupos[mesKey] = [];
+      grupos[mesKey].push(s);
+    });
+
+    let html = '';
+    Object.keys(grupos).sort().forEach(mesKey => {
+      const [y, m] = mesKey.split('-');
+      html += `<div class="mes-header">${MESES[parseInt(m)-1]} ${y}</div>`;
+      grupos[mesKey].forEach(s => {
+        const [sy, sm, sd] = s.data.split('-');
+        const dataObj = new Date(parseInt(sy), parseInt(sm)-1, parseInt(sd));
+        const dow = DIAS_SEMANA[dataObj.getDay()];
+        const tipoClass = 'tipo-' + (s.tipo||'').toLowerCase();
+        html += `
+        <div class="sessao-item ${tipoClass}">
+          <div class="si-header">
+            <div style="display:flex;gap:12px;align-items:center;flex:1;min-width:0">
+              <div class="si-date">
+                <div class="si-day-num">${sd}</div>
+                <div class="si-day-info">
+                  <div class="si-dow">${dow}</div>
+                  <div class="si-time">${s.hora||''}</div>
+                </div>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div class="si-name">${esc(s.nome)}</div>
+                <div class="si-tipo ${tipoClass}">${TIPO_LABEL[s.tipo]||s.tipo||''}</div>
+                ${s.tambor ? `<div class="tambor-badge tambor-${s.tambor}">${TAMBOR_LABEL[s.tambor]||''}</div>` : ''}
+              </div>
             </div>
-            <div class="note-dot ${noteCache[k] ? 'on' : ''}" title="Tem notas"></div>
-            <div class="guide-arrow">›</div>
-          `;
-          row.addEventListener('click', () => openModal(p, { key: null, type: 'Passagem', icon: '✨', _nome: ps.nome }, k));
-          body.appendChild(row);
-        });
-      }
+            <div class="si-actions">
+              <button class="icon-btn" onclick="openEdit('${s.id}')" title="Editar">✎</button>
+              <button class="icon-btn del" onclick="deletar('${s.id}')" title="Excluir">✕</button>
+            </div>
+          </div>
+          ${s.descricao ? `<div class="si-desc">${esc(s.descricao)}</div>` : ''}
+          ${s.responsavel ? `<div class="si-resp">Resp.: ${esc(s.responsavel)}</div>` : ''}
+        <button class="btn-agenda" onclick="gerarICS('${s.id}')">📅 Adicionar à agenda</button>
+        </div>`;
+      });
+    });
+
+    el.innerHTML = html;
+  }
+
+  // ---- MODAL ----
+  window.openModal = () => {
+    document.getElementById('modalTitle').textContent = 'Nova Sessão';
+    document.getElementById('editId').value = '';
+    document.getElementById('fNome').value = '';
+    document.getElementById('fData').value = selectedDate || fmtDate(hoje);
+    document.getElementById('fHora').value = '20:30';
+    document.getElementById('fTipo').value = filtroTipo || '';
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fResp').value = '';
+    document.getElementById('fTambor').value = '';
+    document.getElementById('fSenha').value = '';
+    document.getElementById('senhaErr').style.display = 'none';
+    document.getElementById('overlay').classList.add('open');
+  };
+
+  window.openEdit = (id) => {
+    const s = sessoes.find(x => x.id === id);
+    if (!s) return;
+    document.getElementById('modalTitle').textContent = 'Editar Sessão';
+    document.getElementById('editId').value = id;
+    document.getElementById('fNome').value = s.nome||'';
+    document.getElementById('fData').value = s.data||'';
+    document.getElementById('fHora').value = s.hora||'';
+    document.getElementById('fTipo').value = s.tipo||'';
+    document.getElementById('fDesc').value = s.descricao||'';
+    document.getElementById('fResp').value = s.responsavel||'';
+    document.getElementById('fTambor').value = s.tambor||'';
+    document.getElementById('fSenha').value = '';
+    document.getElementById('senhaErr').style.display = 'none';
+    document.getElementById('overlay').classList.add('open');
+  };
+
+  window.closeModal = () => document.getElementById('overlay').classList.remove('open');
+
+  window.salvar = async () => {
+    const nome = document.getElementById('fNome').value.trim();
+    const data = document.getElementById('fData').value;
+    const tipo = document.getElementById('fTipo').value;
+    if (!nome || !data || !tipo) { alert('Preencha nome, data e tipo.'); return; }
+
+    const payload = {
+      nome, data,
+      hora: document.getElementById('fHora').value,
+      tipo,
+      descricao: document.getElementById('fDesc').value.trim(),
+      responsavel: document.getElementById('fResp').value.trim(),
+      tambor: document.getElementById('fTambor').value,
+      senha: document.getElementById('fSenha').value,
+    };
+
+    const editId = document.getElementById('editId').value;
+    const method = editId ? 'PUT' : 'POST';
+    if (editId) payload.id = editId;
+
+    const res = await fetch(API, { method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    const json = await res.json();
+
+    if (res.status === 403) {
+      document.getElementById('senhaErr').style.display = 'block';
+      return;
     }
 
-    document.getElementById('overlay').classList.add('on');
-    document.getElementById('guide-panel').classList.add('open');
-  }
-
-  function closePanel() {
-    document.getElementById('overlay').classList.remove('on');
-    document.getElementById('guide-panel').classList.remove('open');
-    currentPartner = null;
-  }
-
-  /* ---- NOTES MODAL ---- */
-  function openModal(p, guide, k) {
-    curKey = k;
-    document.getElementById('m-icon').textContent = guide.icon;
-    document.getElementById('m-type').textContent = guide.type;
-    document.getElementById('m-gname').textContent = guide._nome || (guide.key ? p[guide.key] : '');
-    document.getElementById('m-for').innerHTML = `Filha: <span>${p.name}</span>`;
-    document.getElementById('note-text').value = noteCache[k] || '';
-    document.getElementById('ponto-link-input').value = pontoLinkCache[k] || '';
-    document.getElementById('save-ok').classList.remove('on');
-    document.getElementById('m-save').textContent = 'Salvar nota';
-    document.getElementById('m-save').disabled = false;
-    document.getElementById('notes-modal').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('notes-modal').classList.remove('open');
-    curKey = null;
-  }
-
-  document.getElementById('panel-close').addEventListener('click', closePanel);
-  document.getElementById('overlay').addEventListener('click', closePanel);
-  document.getElementById('m-close').addEventListener('click', closeModal);
-  document.getElementById('mbackdrop').addEventListener('click', closeModal);
-
-  document.getElementById('m-save').addEventListener('click', async () => {
-    const txt = document.getElementById('note-text').value;
-    const btn = document.getElementById('m-save');
-    btn.disabled = true; btn.textContent = '...';
-    try {
-      const pontoLink = document.getElementById('ponto-link-input').value.trim();
-      await putNote(curKey, txt);
-      await putNote('ponto:' + curKey, pontoLink);
-      noteCache[curKey] = txt;
-      pontoLinkCache[curKey] = pontoLink;
-      // Update dot in panel
-      const row = document.querySelector(`[data-key="${curKey}"] .note-dot`);
-      if (row) row.classList.toggle('on', !!txt);
-      const ok = document.getElementById('save-ok');
-      ok.classList.add('on');
-      setTimeout(() => ok.classList.remove('on'), 2500);
-      btn.textContent = '✓ Salvo';
-      setTimeout(() => { btn.textContent = 'Salvar nota'; btn.disabled = false; }, 1600);
-    } catch {
-      btn.textContent = 'Erro — tentar novamente';
-      btn.disabled = false;
+    if (editId) {
+      const idx = sessoes.findIndex(x=>x.id===editId);
+      if (idx>=0) sessoes[idx] = json;
+    } else {
+      sessoes.push(json);
+      sessoes.sort((a,b)=>a.data.localeCompare(b.data));
     }
-  });
 
-  document.getElementById('search').addEventListener('input', function () {
-    const q = this.value.toLowerCase();
-    renderCards(q ? partners.filter(p =>
-      (p.name || '').toLowerCase().includes(q) ||
-      (p.function || '').toLowerCase().includes(q)
-    ) : partners);
-  });
+    closeModal();
+    renderLista();
+    toast(editId ? 'Sessão atualizada!' : 'Sessão adicionada!');
+  };
 
-  /* ---- INIT ---- */
-  (async () => {
-    try {
-      const res = await fetch('/api/partners');
-      if (!res.ok) throw new Error();
-      partners = await res.json();
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('grid').style.display = '';
-      renderCards(partners);
-    } catch {
-      document.getElementById('loading').innerHTML =
-        '<p style="color:#c97;font-size:0.9rem;">Não foi possível carregar os dados.<br>Verifique as variáveis de ambiente.</p>';
-    }
-  })();
-})();
+  window.deletar = async (id) => {
+    const senha = prompt('Digite a senha para excluir:');
+    if (senha === null) return;
+    const res = await fetch(API, { method:'DELETE', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id, senha}) });
+    if (res.status === 403) { alert('Senha incorreta.'); return; }
+    sessoes = sessoes.filter(x=>x.id!==id);
+    renderLista();
+    toast('Sessão excluída');
+  };
+
+  // ---- UTILS ----
+  function fmtDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  function esc(s) { if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function toast(msg) { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2400); }
+
+  document.getElementById('overlay').addEventListener('click', e => { if(e.target===document.getElementById('overlay'))closeModal(); });
+
+  load();
 </script>
 </body>
 </html>
