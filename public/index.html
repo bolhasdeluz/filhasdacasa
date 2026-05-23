@@ -103,7 +103,7 @@
     #notes-modal { position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.25s; }
     #notes-modal.open { opacity:1;pointer-events:all; }
     .mbackdrop { position:absolute;inset:0;background:rgba(40,10,20,0.45);backdrop-filter:blur(8px); }
-    .mbox { overscroll-behavior:contain; position:relative;background:#ffffff;border:1px solid var(--border);border-top:3px solid var(--pink);border-radius:16px;width:100%;max-width:560px;padding:1.8rem;box-shadow:0 20px 60px rgba(196,57,107,0.15);transform:scale(0.95) translateY(10px);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+    .mbox { overscroll-behavior:contain; position:relative;background:#ffffff;border:1px solid var(--border);border-top:3px solid var(--pink);border-radius:16px;width:100%;max-width:560px;padding:1.8rem;box-shadow:0 20px 60px rgba(196,57,107,0.15);transform:scale(0.95) translateY(10px);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1); max-height: 90vh; overflow-y: auto; }
     #notes-modal.open .mbox { transform:scale(1) translateY(0); }
     .m-icon { font-size:2rem;margin-bottom:0.6rem; }
     .m-type { font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--muted);margin-bottom:0.2rem;font-family:'Cinzel',serif; }
@@ -401,11 +401,15 @@
     btn.textContent = isOpen ? '⏹ Fechar player' : '▶ Tocar ponto';
   }
 
-  // Prevent scroll from bubbling to Odoo iframe
-  document.getElementById('notes-modal').addEventListener('wheel', e => e.stopPropagation(), { passive: false });
-  document.getElementById('guide-panel').addEventListener('wheel', e => e.stopPropagation(), { passive: false });
-  document.getElementById('notes-modal').addEventListener('touchmove', e => e.stopPropagation(), { passive: false });
-  document.getElementById('guide-panel').addEventListener('touchmove', e => e.stopPropagation(), { passive: false });
+  // Permite o scroll interno nos painéis, mas impede que a página de fundo (Odoo) role junto.
+  const modalEl = document.getElementById('notes-modal');
+  const panelEl = document.getElementById('guide-panel');
+
+  modalEl.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
+  panelEl.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
+  
+  modalEl.addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
+  panelEl.addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
 })();
 </script>
 </body>
