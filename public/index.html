@@ -83,12 +83,15 @@
     .panel-close { background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0.4rem;border-radius:6px;transition:color 0.2s,background 0.2s;flex-shrink:0; }
     .panel-close:hover { color:var(--dark);background:var(--pink-dim); }
     
-    /* Panel Body com Scroll Fluído */
+    /* Panel Body com Scroll Fluído e Espaçamento de Respiro */
     .panel-body { flex:1;overflow-y:auto;padding:1.1rem 1.2rem calc(4rem + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch; }
     .panel-body::-webkit-scrollbar { width:3px; }
     .panel-body::-webkit-scrollbar-thumb { background:var(--border);border-radius:3px; }
     .panel-label { font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--dim);margin-bottom:0.65rem;margin-top:0.8rem; font-family:'Cinzel',serif; }
     .panel-label:first-child { margin-top:0; }
+
+    /* Espaçamento transparente no fundo do painel para empurrar os itens até o topo */
+    .panel-scroll-spacer { height: 45vh; pointer-events: none; }
 
     /* GUIDE ROW */
     .guide-row { display:flex;align-items:center;gap:0.75rem;padding:0.7rem 0.8rem;border-radius:10px;background:var(--surface2);border:1px solid var(--border);margin-bottom:0.45rem;cursor:pointer;transition:background 0.18s,border-color 0.18s,transform 0.15s; }
@@ -156,6 +159,10 @@
     .yt-play-btn { display:inline-flex; align-items:center; gap:5px; margin-top:8px; background:rgba(184,64,64,0.08); border:1px solid rgba(184,64,64,0.3); color:#c0392b; padding:5px 12px; border-radius:5px; font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
     .yt-play-btn:hover { background:rgba(184,64,64,0.15); border-color:rgba(184,64,64,0.6); }
     .m-actions { display:flex;gap:0.6rem;margin-top:1.2rem;align-items:center; padding-bottom: 0.5rem; }
+    
+    /* Espaçamento transparente no fundo do bloco de notas mobile */
+    .m-scroll-spacer { display: none; height: 45vh; pointer-events: none; }
+
     .save-ok { font-size:0.75rem;color:var(--pink);margin-right:auto;opacity:0;transition:opacity 0.3s;flex:1; }
     .save-ok.on { opacity:1; }
     .btn { padding:0.6rem 1.2rem;border-radius:8px;font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;border:none;transition:background 0.2s,transform 0.12s; }
@@ -211,11 +218,14 @@
         height: 100vh;
         border-radius: 0; 
         border-top: none;
-        padding: 1.5rem 1.5rem calc(4rem + env(safe-area-inset-bottom));
+        padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom));
         transform: translateY(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       #notes-modal.open .mbox { transform: translateY(0); }
+
+      /* Ativa o espaçador invisível dentro da modal de notas */
+      .m-scroll-spacer { display: block; }
 
       /* Botão X para fechar a modal de notas no canto superior direito */
       .mobile-m-close { 
@@ -287,6 +297,9 @@
       <button class="btn btn-ghost" id="m-close">Cancelar</button>
       <button class="btn btn-primary" id="m-save">Salvar nota</button>
     </div>
+    
+    <!-- Espaçador móvel transparente para garantir rolagem até o topo -->
+    <div class="m-scroll-spacer"></div>
   </div>
 </div>
 
@@ -402,6 +415,11 @@
           body.appendChild(row);
         });
       }
+      
+      // Adiciona o espaçador de respiro transparente no final da lista de guias
+      const spacer = document.createElement('div');
+      spacer.className = 'panel-scroll-spacer';
+      body.appendChild(spacer);
     }
     document.getElementById('overlay').classList.add('on');
     document.getElementById('guide-panel').classList.add('open');
