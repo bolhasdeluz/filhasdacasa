@@ -40,11 +40,6 @@
     header .sub { font-size:0.7rem; color:rgba(255,255,255,0.6); letter-spacing:0.25em; text-transform:uppercase; margin-top:0.4rem; }
 
     /* SEARCH */
-    .search-wrap { max-width:440px; margin:1.5rem auto 0; padding:0 1.5rem; }
-    .search-wrap input { width:100%; background:#ffffff; border:1px solid rgba(196,57,107,0.25); border-radius:40px; padding:0.7rem 1.3rem; color:var(--text); font-family:'Nunito',sans-serif; font-size:0.9rem; outline:none; transition:border-color 0.2s,box-shadow 0.2s; }
-    .search-wrap input::placeholder { color:var(--dim); }
-    .search-wrap input:focus { border-color:var(--pink); box-shadow:0 0 0 3px rgba(196,57,107,0.1); }
-
     /* GRID */
     #grid { max-width:1060px; margin:1.5rem auto 0; padding:0 1.5rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:1rem; }
 
@@ -176,6 +171,15 @@
     /* EMPTY */
     .empty { text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.6);font-size:0.9rem; }
 
+    /* EXPORT BTN */
+    .search-row { display:flex; align-items:center; gap:0.6rem; max-width:440px; margin:1.5rem auto 0; padding:0 1.5rem; }
+    .search-row input { flex:1; background:#ffffff; border:1px solid rgba(196,57,107,0.25); border-radius:40px; padding:0.7rem 1.3rem; color:var(--text); font-family:'Nunito',sans-serif; font-size:0.9rem; outline:none; transition:border-color 0.2s,box-shadow 0.2s; }
+    .search-row input::placeholder { color:var(--dim); }
+    .search-row input:focus { border-color:var(--pink); box-shadow:0 0 0 3px rgba(196,57,107,0.1); }
+    .btn-export { flex-shrink:0; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.4); color:rgba(255,255,255,0.9); border-radius:40px; padding:0.7rem 1rem; font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.08em; cursor:pointer; transition:all 0.2s; white-space:nowrap; display:flex; align-items:center; gap:0.35rem; }
+    .btn-export:hover { background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.7); color:#fff; }
+    .btn-export:active { transform:scale(0.96); }
+
     /* MOBILE CORRECTIONS */
     @media (max-width:520px) {
       :root { --pw:100vw; }
@@ -256,8 +260,9 @@
   <p class="sub">consulta de guias</p>
 </header>
 
-<div class="search-wrap">
+<div class="search-row">
   <input type="search" id="search" placeholder="🔍  Buscar por nome ou cargo..." autocomplete="off">
+  <button class="btn-export" id="btn-export" title="Exportar CSV" style="display:none">⬇ CSV</button>
 </div>
 
 <div id="loading"><div class="spinner"></div><p>Carregando...</p></div>
@@ -474,6 +479,94 @@
     renderCards(q ? partners.filter(p => (p.name||'').toLowerCase().includes(q)||(p.function||'').toLowerCase().includes(q)) : partners);
   });
 
+  async function exportCSV() {
+    const btn = document.getElementById('btn-export');
+    btn.textContent = '⏳ Exportando...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/export');
+      if (!res.ok) throw new Error('Falha ao buscar dados');
+      const data = await res.json();
+
+      const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+
+      // Cabeçalhos — guias fixos com nota + ponto, passagens agrupadas
+      const headers = [
+        'Nome', 'Cargo', 'Data de Iniciação', 'Tempo de Casa',
+        'Caboclo', 'Nota Caboclo', 'Ponto Caboclo',
+        'Exu', 'Nota Exu', 'Ponto Exu',
+        'Pomba Gira', 'Nota Pomba Gira', 'Ponto Pomba Gira',
+        'Preto Velho', 'Nota Preto Velho', 'Ponto Preto Velho',
+        'Cigana', 'Nota Cigana', 'Ponto Cigana',
+        'Cosme', 'Nota Cosme', 'Ponto Cosme',
+        'Passagens (nomes)', 'Passagens (datas)',
+        'Notas de Passagens', 'Pontos de Passagens',
+      ];
+
+      const GUIDE_TYPES = ['Caboclo', 'Exu', 'Pomba Gira', 'Preto Velho', 'Cigana', 'Cosme'];
+      const GUIDE_KEYS  = [
+        'x_studio_caboclo', 'x_studio_exu', 'x_studio_pomba_gira',
+        'x_studio_preto_velho', 'x_studio_cigana', 'x_studio_cosme',
+      ];
+
+      const rows = [headers];
+
+      for (const p of data) {
+        const t = tempo(p.x_studio_data_da_iniciacao) || '';
+        const passNomes  = (p.passagens_nomes  || []).filter(Boolean).join(' | ');
+        const passDatas  = (p.passagens_datas  || []).filter(Boolean).join(' | ');
+        const notasPass  = (p.notas_passagens  || []).filter(Boolean).join(' | ');
+        const pontosPass = (p.pontos_passagens || []).filter(Boolean).join(' | ');
+
+        const guiaCols = [];
+        for (let i = 0; i < GUIDE_TYPES.length; i++) {
+          const type = GUIDE_TYPES[i];
+          const key  = GUIDE_KEYS[i];
+          guiaCols.push(
+            p[key] || '',
+            (p.notas_guias  || {})[type] || '',
+            (p.pontos_guias || {})[type] || '',
+          );
+        }
+
+        rows.push([
+          p.name || '',
+          p.function || '',
+          p.x_studio_data_da_iniciacao || '',
+          t,
+          ...guiaCols,
+          passNomes,
+          passDatas,
+          notasPass,
+          pontosPass,
+        ].map(esc));
+      }
+
+      const bom  = '\uFEFF';
+      const csv  = bom + rows.map(r => r.join(';')).join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      const hoje = new Date().toISOString().slice(0, 10);
+      a.href     = url;
+      a.download = `filhas-da-casa-${hoje}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      btn.textContent = '✓ Baixado';
+      setTimeout(() => { btn.textContent = '⬇ CSV'; btn.disabled = false; }, 2000);
+
+    } catch (e) {
+      btn.textContent = '⚠ Erro';
+      setTimeout(() => { btn.textContent = '⬇ CSV'; btn.disabled = false; }, 2500);
+    }
+  }
+
+  document.getElementById('btn-export').addEventListener('click', exportCSV);
+
   (async () => {
     try {
       const res = await fetch('/api/partners');
@@ -481,6 +574,7 @@
       partners = await res.json();
       document.getElementById('loading').style.display = 'none';
       document.getElementById('grid').style.display = '';
+      document.getElementById('btn-export').style.display = '';
       renderCards(partners);
     } catch {
       document.getElementById('loading').innerHTML = '<p style="color:rgba(255,255,255,0.7);font-size:0.9rem;">Não foi possível carregar os dados.<br>Verifique as variáveis de ambiente.</p>';
